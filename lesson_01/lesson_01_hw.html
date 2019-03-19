@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Shop</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <style media="screen">
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      header {
+        display: flex;
+      }
+
+      .nav .menu {
+        display: flex;
+        justify-content: space-between;
+        list-style: none;
+        border: 1px solid black;
+        width: 300px;
+        padding: 10px;
+        margin: 10px 0 0 10px;
+      }
+
+      .cart-button {
+        height: 40px;
+        width: 90px;
+        margin: 10px 0 0 10px;
+      }
+
+      /*.goods-list {
+        border: 1px solid black;
+        margin: 10px 0 0 10px;
+        display: flex;
+        justify-content: space-around;
+        width: 1000px;
+      }
+
+      .goods-item {
+        border: 1px solid black;
+        width: 140px;
+        margin: 10px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .add-button {
+        margin-bottom: 10px;
+      }*/
+
+      main .featuredFlexContainer {
+        width: 1139px;
+        display: flex;
+        justify-content: space-between;
+        align-content: space-between;
+        flex-wrap: wrap;
+        text-align: left;
+        margin: 20px auto 0;
+      }
+      main .featuredFlexContainer .featuredFlexChild {
+        position: relative;
+        width: 261px;
+        height: 364px;
+      }
+      main .featuredFlexContainer .featuredFlexChild .featuredProductHover {
+        background-color: rgba(58, 56, 56, 0.83);
+        position: absolute;
+        bottom: 84px;
+        width: 261px;
+        height: 280px;
+        display: none;
+      }
+      main .featuredFlexContainer .featuredFlexChild .featuredProductHover button {
+        width: 123px;
+        height: 39px;
+        margin: 94px 70px 144px;
+        background: rgba(0, 0, 0, 0) url('../img/cart2.png') no-repeat 5px;
+        border: 1px solid #ffffff;
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 39px;
+        cursor: pointer;
+      }
+      main .featuredFlexContainer .featuredFlexChild .featuredProductHover button span {
+        padding-left: 20px;
+      }
+      main .featuredFlexContainer .featuredFlexChild:hover {
+        box-shadow: 0 5px 8px rgba(0, 0, 0, 0.16);
+      }
+      main .featuredFlexContainer .featuredFlexChild:hover .featuredProductHover {
+        display: block;
+      }
+      main .featuredFlexContainer .featuredFlexChild:hover .featuredProductText h6 {
+        display: block;
+      }
+      main .featuredFlexContainer .featuredFlexChild .featuredProductText {
+        margin: 20px 0 17px 14px;
+      }
+      main .featuredFlexContainer .featuredFlexChild .featuredProductText .featuredProductName {
+        color: #222;
+        font-size: 13px;
+        font-weight: 400;
+        margin-bottom: 17px;
+      }
+      main .featuredFlexContainer .featuredFlexChild .featuredProductText .featuredProductPrice {
+        color: #f16d7f;
+        font-size: 16px;
+        font-weight: 700;
+        display: inline-block;
+      }
+      main .featuredFlexContainer .featuredFlexChild .featuredProductText h6 {
+        float: right;
+        color: #e4af48;
+        font-size: 15px;
+        font-weight: 400;
+        display: none;
+        margin-right: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="nav">
+        <ul class="menu">
+          <li><a href="#">Main page</a></li>
+          <li><a href="#">Catalog</a></li>
+          <li><a href="#">Cart</a></li>
+          <li><a href="#">Sign in</a></li>
+          <li><a href="#">Sign up</a></li>
+        </ul>
+      </nav>
+      <button class="cart-button" type="button" name="button">Cart</button>
+    </header>
+
+    <main>
+      <div class="featuredFlexContainer"></div>
+    </main>
+
+    <script type="text/javascript">
+      const goods = [
+        { title: 'Shirt', price: 150 },
+        { title: 'Socks', price: 50 },
+        { title: 'Jacket', price: 350 },
+        { title: 'Shoes', price: 250 },
+      ];
+
+      /*const renderGoodsItem = ({ title, price }) => {
+        return `
+                <div class="goods-item">
+                  <h3>${title}</h3>
+                  <p>${price} $</p>
+                  <button class="add-button">Add to cart</button>
+                </div>
+               `;
+      };*/
+
+      const renderGoodsItem = ({ title, price }, i) => {
+        return `
+                <div class="featuredFlexChild">
+                  <img src="img/product${i + 1}.jpg" alt="product${i + 1}">
+                  <div class="featuredProductHover">
+                    <button type="button" name="button">
+                      <span>Add to Cart</span>
+                    </button>
+                  </div>
+                  <div class="featuredProductText">
+                    <h3 class="featuredProductName">${title}</h3>
+                    <h3 class="featuredProductPrice">$${price}</h3>
+                    <h6>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                    </h6>
+                  </div>
+                </div>
+               `;
+      };
+
+      const renderGoodsList = (list = [{ title: 'Argument wasn\'t supplied', price: 'N/A' }]) => {
+        const goodsList = list.map(renderGoodsItem);
+        document.querySelector('.featuredFlexContainer').innerHTML = goodsList.join('');
+      };
+
+      renderGoodsList(goods);
+    </script>
+  </body>
+</html>
