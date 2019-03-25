@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      sizes = [
+        {name: 'small', price: 50, calories: 20},
+        {name: 'big', price: 100, calories: 40},
+      ];
+
+      stuffings = [
+        {name: 'cheese', price: 10, calories: 20},
+        {name: 'salad', price: 20, calories: 5},
+        {name: 'potato', price: 15, calories: 10},
+      ];
+
+      toppings = [
+        {name: 'spices', price: 15, calories: 0},
+        {name: 'mayo', price: 20, calories: 5},
+      ];
+
+      class Hamburger {
+        constructor(size, stuffing) {
+          this.size = size;
+          this.stuffing = stuffing;
+          this.toppings = [];
+        }
+
+        addTopping(topping) {
+          this.toppings.push(topping);
+        }
+
+        removeTopping(topping) {
+          this.toppings = this.toppings.filter(el => el !== topping);
+        }
+
+        getToppings() {
+          console.log(this.toppings);
+        }
+
+        getSize() {
+          console.log(this.size);
+        }
+
+        getStuffing() {
+          console.log(this.stuffing);
+        }
+
+        calcPrice() {
+          const price = this.size.price + this.stuffing.price + this.toppings.reduce((acc, cur) => acc + cur.price, 0);
+          console.log(price);
+        }
+
+        calcCalories() {
+          const calories = this.size.calories + this.stuffing.calories + this.toppings.reduce((acc, cur) => acc + cur.calories, 0);
+          console.log(calories);
+        }
+      }
+
+      const hamb = new Hamburger(sizes[0], stuffings[0]);
+      hamb.addTopping(toppings[0]);
+      hamb.getToppings();
+      hamb.removeTopping(toppings[0]);
+      hamb.getToppings();
+      hamb.getSize();
+      hamb.getStuffing();
+      hamb.calcPrice();
+      hamb.calcCalories();
+    </script>
+  </body>
+</html>
