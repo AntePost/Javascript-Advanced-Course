@@ -1,17 +1,30 @@
+function sendRequest(method, url) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open(method, url);
+    xhr.send();
+
+    xhr.onreadystatechange = () => {
+      if(xhr.readyState === xhr.DONE) {
+        resolve(JSON.parse(xhr.responseText));
+      }
+    }
+  })
+}
+
 class ItemsList {
   constructor() {
     this.items = [];
   }
 
   getItems() {
-    this.items = [
-      { name: 'Shirt', price: 150 },
-      { name: 'Socks', price: 50 },
-      { name: 'Jacket', price: 350 },
-      { name: 'Shoes', price: 250 },
-    ];
+    return new Promise((resolve, reject) => {
+      sendRequest('GET', 'http://localhost:3000/items.json').then(response => {
+        this.items = response.map((item, i) => new Item(item.name, item.price, i));
+        resolve();
+      });
+    })
 
-    this.items = this.items.map((item, i) => new Item(item.name, item.price, i));
   }
 
   calcTotal() {
@@ -59,15 +72,15 @@ class Item {
 
 class Cart {
   constructor() {
-
+    this.elems = [];
   }
 
-  addElem() {
-    // Добавляет товар в корзину
+  addElem(elem) {
+    this.elems.push(elem);
   }
 
-  removeElem() {
-    // Удаляет товар из корзины
+  removeElem(elem) {
+    this.elems = this.elems.filter(el => el !== elem);
   }
 
   clearCart() {
@@ -75,7 +88,7 @@ class Cart {
   }
 
   getCartContent() {
-    // Возвращает список товаров в корзине
+    return this.elems;
   }
 
   render() {
@@ -98,7 +111,6 @@ class CartElem {
 }
 
 const items = new ItemsList;
-items.getItems();
-
-document.querySelector('.featuredFlexContainer').innerHTML = items.render();
-console.log(items.calcTotal());
+items.getItems().then(() => {
+  document.querySelector('.featuredFlexContainer').innerHTML = items.render();
+});
