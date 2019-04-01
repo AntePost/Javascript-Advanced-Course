@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Lesson 4</title>
+    <style>
+      form {
+        display: flex;
+        flex-direction: column;
+      }
+      label {
+        display: flex;
+        justify-content: space-between;
+        width: 275px;
+      }
+      button {
+        width: 100px;
+      }
+      input, textarea, button, span {
+        margin: 5px 0;
+      }
+      .red {
+        border: 1px solid red;
+      }
+    </style>
+  </head>
+  <body>
+    <form>
+      <label>Name: <input id='name' type="text"></label>
+      <label>Phone number: <input id='phone' type="text"></label>
+      <label>Email: <input id='email' type="text"></label>
+      <label>Text: <textarea rows="8" cols="80"></textarea></label>
+      <button id='submit' type="button">Submit</button>
+      <span id='span'></span>
+    </form>
+
+    <script>
+      // Exercise 1 & 2
+      const text = 'Lorem ipsum dolor sit amet, \'consectetur adipisicing elit\', sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. \'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nis\'i ut aliquip\' ex ea commodo consequat. Duis \'aute irure\' dolor in reprehender\'it in voluptate velit esse cillum dolore eu \'fugiat nulla pariatur\'. Excepteur sint occaecat cupidatat \'non proident\', sunt in culpa qui officia deserunt moll\'it anim id est laborum.'
+
+      function singularQuotesToDouble(text) {
+        const regEx = /('\B)|(\B')/g;
+        console.log(text.replace(regEx, '"'));
+      }
+
+      singularQuotesToDouble(text);
+
+      // Exercise 3
+      function checkForPattern(regEx, str) {
+        return regEx.test(str);
+      }
+
+      const $submit = document.getElementById('submit');
+
+      $submit.addEventListener('click', e => {
+        const $name = document.getElementById('name');
+        const $phone = document.getElementById('phone');
+        const $email = document.getElementById('email');
+        const $span = document.getElementById('span');
+        const $inputs = document.getElementsByTagName('input');
+
+        const regExName = /^[a-z]+$/i;
+        const regExPhone = /^\+7\([0-9]{3}\)[0-9]{3}-[0-9]{4}$/;
+        const regExEmail = /^[a-z0-9\.-]+@[a-z0-9]+\.[a-z]+$/i;
+
+        $span.innerHTML = '';
+        const inputArr = Array.from($inputs);
+        inputArr.forEach(el => el.classList.remove('red'));
+
+        if (!checkForPattern(regExName, $name.value)) {
+          $name.classList.add('red');
+          $span.innerHTML = 'Error!';
+        } else if (!checkForPattern(regExPhone, $phone.value)) {
+          $phone.classList.add('red');
+          $span.innerHTML = 'Error!';
+        } else if (!checkForPattern(regExEmail, $email.value)) {
+          $email.classList.add('red');
+          $span.innerHTML = 'Error!';
+        }
+      })
+    </script>
+  </body>
+</html>
