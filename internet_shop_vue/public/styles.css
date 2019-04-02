@@ -23,6 +23,11 @@ header {
   margin: 10px 0 0 10px;
 }
 
+header input {
+  height: 36px;
+  margin: 10px 0 0 10px;
+}
+
 main .featuredFlexContainer {
   width: 1139px;
   display: flex;
@@ -91,4 +96,11 @@ main .featuredFlexContainer .featuredFlexChild .featuredProductText h6 {
   font-weight: 400;
   display: none;
   margin-right: 10px;
+}
+
+main .cartWrapper {
+  border: 1px solid black;
+  padding: 10px;
+  margin: 10px 0 0 30px;
+  width: 400px;
 }
