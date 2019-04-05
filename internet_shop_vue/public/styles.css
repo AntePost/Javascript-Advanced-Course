@@ -98,6 +98,11 @@ main .featuredFlexContainer .featuredFlexChild .featuredProductText h6 {
   margin-right: 10px;
 }
 
+main .error {
+  font-size: 24px;
+  margin: 30px;
+}
+
 main .cartWrapper {
   border: 1px solid black;
   padding: 10px;
