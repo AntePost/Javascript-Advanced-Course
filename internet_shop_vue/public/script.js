@@ -1,3 +1,5 @@
+const API_URL = 'http://localhost:3000';
+
 Vue.component('search', {
   template: `<input type="text" placeholder="Search" @input="$emit('input', $event.target.value)">`,
 });
@@ -8,12 +10,17 @@ Vue.component('cart', {
               <div class="cartWrapper">
                 <h3>Cart</h3>
                 <div class="cart" v-if="cart.length">
-                  <p v-for="cartItem in cart">There is {{ cartItem.quantity }} item of {{ cartItem.name }} in the cart with the price of {{ cartItem.price * cartItem.quantity }}</p>
+                  <p v-for="cartItem in cart">There is {{ cartItem.quantity }} item of {{ cartItem.name }} in the cart with the price of {{ cartItem.price * cartItem.quantity }} <button @click="handleRemoveClick(cartItem)">Remove</button></p>
                   <p>The sum total of items in the cart - {{ cart_total }}</p>
                 </div>
                 <span v-if="!cart.length">The cart is empty</span>
               </div>
-            `
+            `,
+  methods: {
+    handleRemoveClick(cartItem) {
+      this.$emit('ondelete', cartItem);
+    }
+  }
 });
 
 Vue.component('error', {
@@ -30,7 +37,7 @@ const app = new Vue({
     responseCode: null,
   },
   mounted() {
-    fetch('http://localhost:3000/products')
+    fetch(API_URL + '/products')
       .then(response => {
         this.responseCode = response.status;
         return response.json();
@@ -41,6 +48,10 @@ const app = new Vue({
           return item;
         });
       });
+
+    fetch(API_URL + '/cart')
+      .then(response => response.json())
+      .then(cartItems => this.cart = cartItems);
   },
   computed: {
     filteredItems() {
@@ -55,15 +66,66 @@ const app = new Vue({
     handleBuyClick(item) {
       const el = this.cart.find(el => el.name === item.name);
       if (el !== undefined) {
-        el.quantity++;
+        fetch(API_URL + '/cart/' + item.id, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ quantity: el.quantity + 1 }),
+        })
+          .then(response => response.json())
+          .then(serverCartItem => {
+            const itemIdx = this.cart.findIndex(el => el.id === item.id);
+            Vue.set(this.cart, itemIdx, serverCartItem);
+          });
       } else {
-        const cartItem = {
-          name: item.name,
-          price: item.price,
-          quantity: 1,
-        };
-        this.cart.push(cartItem);
+        fetch(API_URL + '/cart', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ ...item, quantity: 1 }),
+        })
+          .then(response => response.json())
+          .then(serverCartItem => this.cart.push(serverCartItem));
       }
     },
+
+    handleEmptyCartClick() {
+      fetch(API_URL + '/cart', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify([]),
+      })
+        .then(() => {
+          this.cart = [];
+        })
+    },
+
+    handleRemoveClick(cartItem) {
+      if (cartItem.quantity > 1) {
+        fetch(API_URL + '/cart/' + cartItem.id, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ quantity: cartItem.quantity - 1 }),
+        })
+          .then(response => response.json())
+          .then(serverCartItem => {
+            const itemIdx = this.cart.findIndex(el => el.id === cartItem.id);
+            Vue.set(this.cart, itemIdx, serverCartItem);
+          });
+      } else {
+        fetch(API_URL + '/cart/' + cartItem.id, {
+          method: 'DELETE'
+        })
+          .then(() => {
+            this.cart = this.cart.filter(el => el.id !== cartItem.id)
+          });
+      }
+    }
   },
 });

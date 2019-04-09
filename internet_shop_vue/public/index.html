@@ -20,7 +20,7 @@
             <li><a href="#">Sign up</a></li>
           </ul>
         </nav>
-        <button class="cart-button" type="button" name="button" @click="cart = []">Empty cart</button>
+        <button class="cart-button" type="button" name="button" @click="handleEmptyCartClick">Empty cart</button>
         <search v-model="searchQuery"></search>
       </header>
 
@@ -47,7 +47,7 @@
           </div>
         </div>
         <error v-if='responseCode !== 200' :response_code="responseCode" class="error"></error>
-        <cart :cart="cart" :cart_total="cartTotal"></cart>
+        <cart :cart="cart" :cart_total="cartTotal" @ondelete="handleRemoveClick"></cart>
       </main>
     </div>
   </body>
